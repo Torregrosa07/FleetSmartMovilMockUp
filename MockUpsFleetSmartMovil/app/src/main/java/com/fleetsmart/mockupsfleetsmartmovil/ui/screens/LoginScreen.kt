@@ -1,6 +1,5 @@
 package com.fleetsmart.mockupsfleetsmartmovil.ui.screens
 
-import androidx.compose.foundation.Image // IMPORTANTE: Nuevo import
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -8,6 +7,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.LocalShipping
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
@@ -15,7 +15,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource // IMPORTANTE: Nuevo import
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -23,7 +22,6 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.fleetsmart.mockupsfleetsmartmovil.R // IMPORTANTE: Importar R para encontrar el drawable
 import com.fleetsmart.mockupsfleetsmartmovil.ui.theme.AppColors
 import com.fleetsmart.mockupsfleetsmartmovil.ui.viewmodel.LoginViewModel
 
@@ -52,19 +50,24 @@ fun LoginScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            // --- LOGO (MODIFICADO) ---
-            // Si tu logo ya tiene fondo o quieres que se vea limpio, quitamos el Surface azul
-            // y ponemos la imagen directamente.
+            // --- LOGO ---
+            Surface(
+                modifier = Modifier.size(80.dp),
+                shape = RoundedCornerShape(16.dp),
+                color = AppColors.Primary,
+                shadowElevation = 4.dp
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    Icon(
+                        imageVector = Icons.Default.LocalShipping,
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier.size(48.dp)
+                    )
+                }
+            }
 
-            Image(
-                painter = painterResource(id = R.drawable.logo), // Referencia a tu archivo
-                contentDescription = "Logo FleetSmart",
-                modifier = Modifier
-                    .size(120.dp) // Ajusta el tamaño según necesites (ej. 100.dp, 150.dp)
-                    .padding(bottom = 16.dp)
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
             Text(
                 text = "Bienvenido a FleetSmart",
@@ -80,7 +83,7 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // ... EL RESTO DEL CÓDIGO DEL FORMULARIO SIGUE IGUAL ...
+            // --- FORMULARIO ---
             OutlinedTextField(
                 value = email,
                 onValueChange = { viewModel.onEmailChange(it) },

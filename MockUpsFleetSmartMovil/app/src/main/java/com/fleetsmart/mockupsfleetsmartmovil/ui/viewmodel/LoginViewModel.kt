@@ -24,7 +24,7 @@ class LoginViewModel : ViewModel() {
 
     fun onEmailChange(newValue: String) {
         _email.value = newValue
-        _error.value = null // Limpiar error al escribir
+        _error.value = null
     }
 
     fun onPasswordChange(newValue: String) {
@@ -40,11 +40,8 @@ class LoginViewModel : ViewModel() {
 
         viewModelScope.launch {
             _isLoading.value = true
-            delay(1500) // Simular petición a API
+            delay(1500)
             _isLoading.value = false
-
-            // Aquí iría la lógica real de autenticación.
-            // Por ahora, siempre es exitoso.
             onLoginSuccess()
         }
     }
