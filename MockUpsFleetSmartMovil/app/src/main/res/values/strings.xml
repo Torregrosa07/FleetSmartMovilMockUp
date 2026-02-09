@@ -1,0 +1,65 @@
+<resources>
+    <string name="app_name">FleetDriver</string>
+
+    <!-- Navigation -->
+    <string name="nav_routes">Rutas</string>
+    <string name="nav_incidents">Incidencias</string>
+    <string name="nav_profile">Perfil</string>
+
+    <!-- Routes Screen -->
+    <string name="my_routes_title">Mis Rutas</string>
+    <string name="my_routes_subtitle">Gestiona tus rutas asignadas</string>
+    <string name="route_start">Iniciar Ruta</string>
+    <string name="route_continue">Continuar Ruta</string>
+    <string name="route_distance">Distancia</string>
+    <string name="route_duration">Duración</string>
+    <string name="route_stops">Paradas</string>
+
+    <!-- Route Status -->
+    <string name="status_pending">Pendiente</string>
+    <string name="status_in_progress">En Curso</string>
+    <string name="status_completed">Completada</string>
+
+    <!-- Active Route Screen -->
+    <string name="route_progress">Progreso de la ruta</string>
+    <string name="pause_route">Pausar</string>
+    <string name="resume_route">Reanudar</string>
+    <string name="finish_route">Finalizar Ruta</string>
+    <string name="route_stops_title">Paradas de la Ruta</string>
+    <string name="stop_number">Parada #%1$d</string>
+    <string name="call_button">Llamar</string>
+
+    <!-- Incident Report Screen -->
+    <string name="report_incident_title">Reportar Incidencia</string>
+    <string name="report_incident_subtitle">Informa sobre cualquier problema durante tu ruta</string>
+    <string name="incident_type">Tipo de Incidencia</string>
+    <string name="incident_description">Descripción del Problema</string>
+    <string name="incident_description_hint">Describe el problema con el mayor detalle posible…</string>
+    <string name="attach_photo">Adjuntar Fotos (Opcional)</string>
+    <string name="take_photo">Tomar o Adjuntar Foto</string>
+    <string name="send_report">Enviar Reporte</string>
+    <string name="emergency_warning">Si se trata de una emergencia, contacta inmediatamente con el centro de operaciones al 900 123 456</string>
+
+    <!-- Incident Types -->
+    <string name="incident_vehicle">Problema con el vehículo</string>
+    <string name="incident_route">Problema con la ruta</string>
+    <string name="incident_traffic">Incidente de tráfico</string>
+    <string name="incident_other">Otro</string>
+
+    <!-- Success Screen -->
+    <string name="incident_reported">Incidencia Reportada</string>
+    <string name="incident_success_message">Tu reporte ha sido enviado exitosamente. El equipo de gestión lo revisará pronto.</string>
+
+    <!-- Profile Screen -->
+    <string name="professional_driver">Conductor Profesional</string>
+    <string name="license">Licencia</string>
+    <string name="phone">Teléfono</string>
+    <string name="email">Email</string>
+    <string name="assigned_vehicle">Vehículo Asignado</string>
+    <string name="settings">Configuración</string>
+    <string name="notifications">Notificaciones</string>
+    <string name="language">Idioma</string>
+    <string name="help_support">Ayuda y soporte</string>
+    <string name="about">Acerca de</string>
+    <string name="logout">Cerrar Sesión</string>
+</resources>
