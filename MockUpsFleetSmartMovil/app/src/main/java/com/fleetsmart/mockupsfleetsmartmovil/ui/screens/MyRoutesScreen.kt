@@ -27,20 +27,18 @@ fun MyRoutesScreen(
     viewModel: RoutesViewModel = viewModel()
 ) {
     val routes by viewModel.routes.collectAsState()
-    val isLoading by viewModel.isLoading.collectAsState()
+    // val isLoading by viewModel.isLoading.collectAsState()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        // Header
-        Column(
-            modifier = Modifier.padding(bottom = 16.dp)
-        ) {
+        Column(modifier = Modifier.padding(bottom = 16.dp)) {
             Text(
                 text = "Mis Rutas",
-                style = MaterialTheme.typography.headlineMedium
+                style = MaterialTheme.typography.headlineMedium,
+                color = AppColors.Primary // Título en Azul
             )
             Text(
                 text = "Gestiona tus rutas asignadas",
@@ -49,23 +47,17 @@ fun MyRoutesScreen(
             )
         }
 
-        if (isLoading) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
-            }
-        } else {
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                items(routes) { route ->
-                    RouteCard(
-                        route = route,
-                        onStartRoute = { onStartRoute(route.id) }
-                    )
-                }
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            items(routes) { route ->
+                RouteCard(
+                    route = route,
+                    onStartRoute = {
+                        // LLAMADA EXPLÍCITA: Aquí es donde se dispara la navegación
+                        onStartRoute(route.id)
+                    }
+                )
             }
         }
     }
@@ -76,11 +68,17 @@ private fun RouteCard(
     route: Route,
     onStartRoute: () -> Unit
 ) {
-    AppCard {
+    // Asegúrate de que AppCard sea un contenedor simple (Card o Surface)
+    Card(
+        colors = CardDefaults.cardColors(containerColor = AppColors.Card),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        modifier = Modifier.fillMaxWidth()
+    ) {
         Column(
+            modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // Header
+            // Header: Nombre y Fecha
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -120,32 +118,19 @@ private fun RouteCard(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                StatItem(
-                    icon = Icons.Default.Navigation,
-                    label = "Distancia",
-                    value = route.distance,
-                    modifier = Modifier.weight(1f)
-                )
-                StatItem(
-                    icon = Icons.Default.AccessTime,
-                    label = "Duración",
-                    value = route.duration,
-                    modifier = Modifier.weight(1f)
-                )
-                StatItem(
-                    icon = Icons.Default.Place,
-                    label = "Paradas",
-                    value = route.stops.toString(),
-                    modifier = Modifier.weight(1f)
-                )
+                StatItem(Icons.Default.Navigation, "Distancia", route.distance, Modifier.weight(1f))
+                StatItem(Icons.Default.AccessTime, "Duración", route.duration, Modifier.weight(1f))
+                StatItem(Icons.Default.Place, "Paradas", route.stops.toString(), Modifier.weight(1f))
             }
 
-            // Action Button
+            // BOTÓN DE ACCIÓN
             if (route.status != RouteStatus.COMPLETED) {
                 Button(
-                    onClick = onStartRoute,
+                    onClick = { onStartRoute() }, // Acción de click
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(
+                        // Si está en curso -> Fondo Azul (Primary), Texto Blanco
+                        // Si está pendiente -> Fondo Azul Claro (Secondary), Texto Azul Oscuro
                         containerColor = if (route.status == RouteStatus.IN_PROGRESS)
                             AppColors.Primary
                         else
@@ -157,17 +142,12 @@ private fun RouteCard(
                     )
                 ) {
                     Text(
-                        text = if (route.status == RouteStatus.IN_PROGRESS)
-                            "Continuar Ruta"
-                        else
-                            "Iniciar Ruta"
+                        text = if (route.status == RouteStatus.IN_PROGRESS) "Continuar Ruta" else "Iniciar Ruta"
                     )
                     Icon(
                         imageVector = Icons.Default.ChevronRight,
                         contentDescription = null,
-                        modifier = Modifier
-                            .padding(start = 8.dp)
-                            .size(20.dp)
+                        modifier = Modifier.padding(start = 8.dp).size(20.dp)
                     )
                 }
             }
@@ -194,15 +174,8 @@ private fun StatItem(
             tint = AppColors.MutedForeground
         )
         Column {
-            Text(
-                text = label,
-                style = MaterialTheme.typography.labelSmall,
-                color = AppColors.MutedForeground
-            )
-            Text(
-                text = value,
-                style = MaterialTheme.typography.bodyMedium
-            )
+            Text(text = label, style = MaterialTheme.typography.labelSmall, color = AppColors.MutedForeground)
+            Text(text = value, style = MaterialTheme.typography.bodyMedium)
         }
     }
 }

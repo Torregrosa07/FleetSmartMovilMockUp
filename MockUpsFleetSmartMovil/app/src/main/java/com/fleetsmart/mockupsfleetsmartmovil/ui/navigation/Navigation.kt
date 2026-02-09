@@ -1,6 +1,5 @@
 package com.fleetsmart.mockupsfleetsmartmovil.ui.navigation
 
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -20,6 +19,7 @@ import com.fleetsmart.mockupsfleetsmartmovil.ui.theme.AppColors
 import androidx.compose.ui.unit.dp
 
 sealed class Screen(val route: String, val title: String, val icon: ImageVector) {
+    object Login : Screen("login", "Login", Icons.Default.Lock) // Nueva Ruta
     object Routes : Screen("routes", "Rutas", Icons.Default.List)
     object ActiveRoute : Screen("active_route", "Ruta Activa", Icons.Default.Map)
     object Incidents : Screen("incidents", "Incidencias", Icons.Default.Warning)
@@ -32,40 +32,54 @@ fun FleetDriverApp() {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
+    val currentRoute = currentDestination?.route
 
-    val showBottomBar = currentDestination?.route != Screen.ActiveRoute.route
+    // Función para navegar de forma segura
+    fun navigateToTab(route: String) {
+        navController.navigate(route) {
+            popUpTo(navController.graph.findStartDestination().id) {
+                saveState = true
+            }
+            launchSingleTop = true
+            restoreState = true
+        }
+    }
+
+    // LÓGICA DE VISIBILIDAD DE BARRAS
+    // Ocultamos barras en Login y en ActiveRoute
+    val showBars = currentRoute != Screen.Login.route && currentRoute != Screen.ActiveRoute.route
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("FleetDriver") },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = AppColors.Card,
-                    titleContentColor = AppColors.Foreground
-                ),
-                actions = {
-                    IconButton(onClick = { navController.navigate(Screen.Profile.route) }) {
-                        Surface(
-                            shape = MaterialTheme.shapes.small,
-                            color = AppColors.Primary,
-                            modifier = Modifier.size(40.dp)
-                        ) {
-                            Box(
-                                contentAlignment = androidx.compose.ui.Alignment.Center
+            if (showBars) {
+                TopAppBar(
+                    title = { Text("FleetSmart") },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = AppColors.Card,
+                        titleContentColor = AppColors.Foreground
+                    ),
+                    actions = {
+                        IconButton(onClick = { navigateToTab(Screen.Profile.route) }) {
+                            Surface(
+                                shape = MaterialTheme.shapes.small,
+                                color = AppColors.Primary,
+                                modifier = Modifier.size(40.dp)
                             ) {
-                                Text(
-                                    text = "CM",
-                                    style = MaterialTheme.typography.labelMedium,
-                                    color = AppColors.PrimaryForeground
-                                )
+                                Box(contentAlignment = androidx.compose.ui.Alignment.Center) {
+                                    Text(
+                                        text = "CM",
+                                        style = MaterialTheme.typography.labelMedium,
+                                        color = AppColors.PrimaryForeground
+                                    )
+                                }
                             }
                         }
                     }
-                }
-            )
+                )
+            }
         },
         bottomBar = {
-            if (showBottomBar) {
+            if (showBars) {
                 NavigationBar(
                     containerColor = AppColors.Card,
                     contentColor = AppColors.Foreground
@@ -82,28 +96,10 @@ fun FleetDriverApp() {
                         } == true
 
                         NavigationBarItem(
-                            icon = {
-                                Icon(
-                                    imageVector = screen.icon,
-                                    contentDescription = screen.title
-                                )
-                            },
-                            label = {
-                                Text(
-                                    text = screen.title,
-                                    style = MaterialTheme.typography.labelSmall
-                                )
-                            },
+                            icon = { Icon(screen.icon, contentDescription = screen.title) },
+                            label = { Text(screen.title, style = MaterialTheme.typography.labelSmall) },
                             selected = selected,
-                            onClick = {
-                                navController.navigate(screen.route) {
-                                    popUpTo(navController.graph.findStartDestination().id) {
-                                        saveState = true
-                                    }
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
-                            },
+                            onClick = { navigateToTab(screen.route) },
                             colors = NavigationBarItemDefaults.colors(
                                 selectedIconColor = AppColors.Primary,
                                 selectedTextColor = AppColors.Primary,
@@ -131,12 +127,25 @@ fun NavigationGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screen.Routes.route,
+        startDestination = Screen.Login.route, // CAMBIO: Empezamos en Login
         modifier = modifier
     ) {
+        // --- PANTALLA DE LOGIN ---
+        composable(Screen.Login.route) {
+            LoginScreen(
+                onLoginSuccess = {
+                    // Al loguearse, vamos a rutas y borramos el login del historial (backstack)
+                    // para que al dar "atrás" no vuelva al login.
+                    navController.navigate(Screen.Routes.route) {
+                        popUpTo(Screen.Login.route) { inclusive = true }
+                    }
+                }
+            )
+        }
+
         composable(Screen.Routes.route) {
             MyRoutesScreen(
-                onStartRoute = { routeId ->
+                onStartRoute = { _ ->
                     navController.navigate(Screen.ActiveRoute.route)
                 }
             )
@@ -155,7 +164,7 @@ fun NavigationGraph(
         }
 
         composable(Screen.Profile.route) {
-            ProfileScreen()
+            ProfileScreen() // Sugerencia: Añadir botón de cerrar sesión que navegue a "login"
         }
     }
 }

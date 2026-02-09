@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">FleetDriver</string>
+    <string name="app_name">FleetSmart</string>
 
     <!-- Navigation -->
     <string name="nav_routes">Rutas</string>

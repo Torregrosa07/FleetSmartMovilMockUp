@@ -1,46 +1,45 @@
 package com.fleetsmart.mockupsfleetsmartmovil.ui.theme
 
-import android.app.Activity
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
 
 private val LightColorScheme = lightColorScheme(
     primary = AppColors.Primary,
     onPrimary = AppColors.PrimaryForeground,
+
     secondary = AppColors.Secondary,
     onSecondary = AppColors.SecondaryForeground,
+
     tertiary = AppColors.Accent,
     onTertiary = AppColors.AccentForeground,
+
     background = AppColors.Background,
     onBackground = AppColors.Foreground,
+
     surface = AppColors.Card,
     onSurface = AppColors.CardForeground,
+
+    // Importante para Inputs y Cards secundarios
     surfaceVariant = AppColors.Muted,
     onSurfaceVariant = AppColors.MutedForeground,
+
     error = AppColors.Destructive,
     onError = AppColors.DestructiveForeground,
-    outline = AppColors.Border,
-    outlineVariant = AppColors.Border,
+
+    outline = AppColors.Border
 )
 
 @Composable
 fun MockUpsFleetSmartMovilTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: Boolean = isSystemInDarkTheme(), // Forzamos modo claro por ahora si lo prefieres
     content: @Composable () -> Unit
 ) {
-    val colorScheme = LightColorScheme
-
+    // Usamos siempre el esquema claro basado en tus colores azules
     MaterialTheme(
-        colorScheme = colorScheme,
-        typography = Typography,
-        shapes = Shapes,
+        colorScheme = LightColorScheme,
+        typography = Typography, // Asegúrate de tener Typography definido o usa MaterialTheme.typography
         content = content
     )
 }
