@@ -6,8 +6,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.LocalShipping
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
@@ -50,24 +50,15 @@ fun LoginScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            // --- LOGO ---
-            Surface(
-                modifier = Modifier.size(80.dp),
-                shape = RoundedCornerShape(16.dp),
-                color = AppColors.Primary,
-                shadowElevation = 4.dp
-            ) {
-                Box(contentAlignment = Alignment.Center) {
-                    Icon(
-                        imageVector = Icons.Default.LocalShipping,
-                        contentDescription = null,
-                        tint = Color.White,
-                        modifier = Modifier.size(48.dp)
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(24.dp))
+            // --- LOGO SUSTITUIDO POR ICONO SEGURO ---
+            Icon(
+                imageVector = Icons.Default.LocalShipping,
+                contentDescription = "Logo FleetSmart",
+                tint = AppColors.Primary,
+                modifier = Modifier
+                    .size(100.dp)
+                    .padding(bottom = 16.dp)
+            )
 
             Text(
                 text = "Bienvenido a FleetSmart",
@@ -83,7 +74,6 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // --- FORMULARIO ---
             OutlinedTextField(
                 value = email,
                 onValueChange = { viewModel.onEmailChange(it) },

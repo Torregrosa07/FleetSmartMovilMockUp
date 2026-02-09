@@ -1,6 +1,5 @@
 package com.fleetsmart.mockupsfleetsmartmovil.ui.screens
 
-import android.preference.PreferenceManager
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -16,7 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -24,7 +22,6 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fleetsmart.mockupsfleetsmartmovil.ui.theme.AppColors
 import com.fleetsmart.mockupsfleetsmartmovil.ui.viewmodel.ActiveRouteViewModel
-import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
@@ -38,20 +35,11 @@ fun ActiveRouteScreen(
 ) {
     val state by viewModel.state.collectAsState()
 
-    // Calculamos el progreso directamente en la UI basándonos en el estado actual
-    // para asegurar que se actualice correctamente al recomponer
     val completedCount = state.stops.count { it.completed }
     val totalCount = state.stops.size
     val currentProgress = if (totalCount > 0) completedCount.toFloat() / totalCount else 0f
 
-    val context = LocalContext.current
-
-    // Configuración inicial de OSMDroid
-    LaunchedEffect(Unit) {
-        Configuration.getInstance()
-            .load(context, PreferenceManager.getDefaultSharedPreferences(context))
-        Configuration.getInstance().userAgentValue = context.packageName
-    }
+    // NOTA: Hemos quitado el LaunchedEffect de configuración porque ya está en MainActivity
 
     Column(modifier = Modifier.fillMaxSize().background(AppColors.Background)) {
         // --- Header con Progreso ---
@@ -59,29 +47,13 @@ fun ActiveRouteScreen(
             Column(modifier = Modifier.padding(16.dp)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     IconButton(onClick = onBack) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            "Volver",
-                            tint = AppColors.Foreground
-                        )
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Volver", tint = AppColors.Foreground)
                     }
                     Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            state.routeName,
-                            fontWeight = FontWeight.Bold,
-                            color = AppColors.Foreground
-                        )
-                        Text(
-                            "${state.distance} · ${state.duration}",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = AppColors.MutedForeground
-                        )
+                        Text(state.routeName, fontWeight = FontWeight.Bold, color = AppColors.Foreground)
+                        Text("${state.distance} · ${state.duration}", style = MaterialTheme.typography.bodySmall, color = AppColors.MutedForeground)
                     }
-                    Text(
-                        "${(currentProgress * 100).toInt()}%",
-                        color = AppColors.Primary,
-                        fontWeight = FontWeight.Bold
-                    )
+                    Text("${(currentProgress * 100).toInt()}%", color = AppColors.Primary, fontWeight = FontWeight.Bold)
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 LinearProgressIndicator(
@@ -127,8 +99,7 @@ fun ActiveRouteScreen(
 
                                 val line = Polyline()
                                 line.setPoints(routePoints)
-                                line.outlinePaint.color =
-                                    android.graphics.Color.parseColor("#2563EB")
+                                line.outlinePaint.color = android.graphics.Color.parseColor("#2563EB")
                                 line.outlinePaint.strokeWidth = 15f
                                 overlays.add(line)
 
@@ -160,10 +131,7 @@ fun ActiveRouteScreen(
 
             // --- Controles de la Ruta ---
             item {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     OutlinedButton(
                         onClick = { viewModel.togglePauseRoute() },
                         modifier = Modifier.weight(1f),
@@ -172,11 +140,7 @@ fun ActiveRouteScreen(
                         ),
                         border = androidx.compose.foundation.BorderStroke(1.dp, AppColors.Primary)
                     ) {
-                        // Accedemos a state.isPaused en lugar de la variable suelta
-                        Icon(
-                            if (state.isPaused) Icons.Default.PlayCircle else Icons.Default.PauseCircle,
-                            null
-                        )
+                        Icon(if (state.isPaused) Icons.Default.PlayCircle else Icons.Default.PauseCircle, null)
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(if (state.isPaused) "Reanudar" else "Pausar")
                     }
@@ -203,7 +167,6 @@ fun ActiveRouteScreen(
                 )
             }
 
-            // Iteramos sobre state.stops
             items(state.stops) { stop ->
                 Card(
                     colors = CardDefaults.cardColors(
